@@ -9,10 +9,9 @@
 
 ## Verified Toolchain
 
-- Qt: `D:\qt\5.15.2\msvc2019_64`
-- Qt Creator: `D:\qt\Tools\QtCreator\bin\qtcreator.exe`
+- Qt: `D:\Qt\Qt-5.14.2\5.14.2\msvc2017_64`
+- Qt Creator: `D:\Qt\Qt-5.14.2\Tools\QtCreator\bin\qtcreator.exe`
 - CMake: `C:\Program Files\CMake\bin\cmake.exe`
-- Ninja: `D:\qt\Tools\Ninja\ninja.exe`
 - MSVC Build Tools: `C:\BuildTools`
 - MSVC environment script: `C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat`
 
@@ -20,6 +19,8 @@
 
 - CloudCompare 2.11+ requires Qt 5 with `5.9 <= Qt < 6.0`.
 - A clean out-of-source build is required.
+- In `PowerShell`, `call` is not a native command. Use `cmd /c "call C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat && set"` if you need to initialize and inspect the MSVC environment from PowerShell.
+- This Qt installation does not include a standalone `ninja.exe`, so the verified local configure/build flow uses `NMake Makefiles`.
 - On this machine, newer CMake 4.x requires:
   - `-DCMAKE_POLICY_VERSION_MINIMUM=3.5`
   This is needed because some bundled plugin `CMakeLists.txt` files still declare compatibility with older CMake versions.
@@ -31,17 +32,9 @@ Run from `cmd.exe`:
 ```bat
 call C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat
 
-"C:\Program Files\CMake\bin\cmake.exe" ^
-  -S D:\CloudCompare ^
-  -B D:\CloudCompare\build-release ^
-  -G Ninja ^
-  -DCMAKE_BUILD_TYPE=Release ^
-  -DCMAKE_PREFIX_PATH=D:\qt\5.15.2\msvc2019_64 ^
-  -DCMAKE_INSTALL_PREFIX=D:\CloudCompare\install-release ^
-  -DCMAKE_MAKE_PROGRAM=D:\qt\Tools\Ninja\ninja.exe ^
-  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+"C:\Program Files\CMake\bin\cmake.exe" -S D:\CloudCompare -B D:\CloudCompare\build-release -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=D:\Qt\Qt-5.14.2\5.14.2\msvc2017_64 -DCMAKE_INSTALL_PREFIX=D:\CloudCompare\install-release -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 
-"C:\Program Files\CMake\bin\cmake.exe" --build D:\CloudCompare\build-release --parallel
+"C:\Program Files\CMake\bin\cmake.exe" --build D:\CloudCompare\build-release
 "C:\Program Files\CMake\bin\cmake.exe" --install D:\CloudCompare\build-release
 ```
 
@@ -56,17 +49,9 @@ Run from `cmd.exe`:
 ```bat
 call C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat
 
-"C:\Program Files\CMake\bin\cmake.exe" ^
-  -S D:\CloudCompare ^
-  -B D:\CloudCompare\build-debug ^
-  -G Ninja ^
-  -DCMAKE_BUILD_TYPE=Debug ^
-  -DCMAKE_PREFIX_PATH=D:\qt\5.15.2\msvc2019_64 ^
-  -DCMAKE_INSTALL_PREFIX=D:\CloudCompare\install-debug ^
-  -DCMAKE_MAKE_PROGRAM=D:\qt\Tools\Ninja\ninja.exe ^
-  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+"C:\Program Files\CMake\bin\cmake.exe" -S D:\CloudCompare -B D:\CloudCompare\build-debug -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=D:\Qt\Qt-5.14.2\5.14.2\msvc2017_64 -DCMAKE_INSTALL_PREFIX=D:\CloudCompare\install-debug -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 
-"C:\Program Files\CMake\bin\cmake.exe" --build D:\CloudCompare\build-debug --parallel
+"C:\Program Files\CMake\bin\cmake.exe" --build D:\CloudCompare\build-debug
 "C:\Program Files\CMake\bin\cmake.exe" --install D:\CloudCompare\build-debug
 ```
 

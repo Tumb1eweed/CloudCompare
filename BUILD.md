@@ -34,13 +34,19 @@ that CMake will find.
 
 You can also use the `CMAKE_INSTALL_PREFIX` to customize the path where CloudCompare will be installed.
 
+On Windows, if you launch builds from PowerShell instead of `cmd.exe`, remember that `call` is a batch command rather than a PowerShell command. To initialize the MSVC environment from PowerShell, you can run:
+
+```powershell
+cmd /c "call C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat && set"
+```
+
 If you use CMake-GUI the options are the same, you just enter the values in the GUI.
 
 Example:
 ```shell
 # Windows
 mkdir build & cd build
-cmake -DCMAKE_PREFIX_PATH=C:\Qt\5.15.2\msvc2019_64 ..
+cmake -DCMAKE_PREFIX_PATH=C:\Qt\5.14.2\msvc2017_64 ..
 
 # macOs
 mkdir build && cd build
@@ -51,51 +57,37 @@ mkdir build && cd build
 cmake ..
 ```
 
-Verified Release example on Windows 11 with Qt 5.15.2 + MSVC Build Tools 2022 + Ninja:
+Verified Release example on Windows 11 with Qt 5.14.2 + MSVC Build Tools 2022 + NMake:
 
 ```shell
 call C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat
 
-"C:\Program Files\CMake\bin\cmake.exe" ^
-  -S D:\CloudCompare ^
-  -B D:\CloudCompare\build-release ^
-  -G Ninja ^
-  -DCMAKE_BUILD_TYPE=Release ^
-  -DCMAKE_PREFIX_PATH=D:\qt\5.15.2\msvc2019_64 ^
-  -DCMAKE_INSTALL_PREFIX=D:\CloudCompare\install-release ^
-  -DCMAKE_MAKE_PROGRAM=D:\qt\Tools\Ninja\ninja.exe ^
-  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+"C:\Program Files\CMake\bin\cmake.exe" -S D:\CloudCompare -B D:\CloudCompare\build-release -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=D:\Qt\Qt-5.14.2\5.14.2\msvc2017_64 -DCMAKE_INSTALL_PREFIX=D:\CloudCompare\install-release -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 
-"C:\Program Files\CMake\bin\cmake.exe" --build D:\CloudCompare\build-release --parallel
+"C:\Program Files\CMake\bin\cmake.exe" --build D:\CloudCompare\build-release
 "C:\Program Files\CMake\bin\cmake.exe" --install D:\CloudCompare\build-release
 ```
 
 Notes:
 - `vcvars64.bat` initializes the MSVC compiler environment before configuring or building.
+- This Qt installation does not provide a standalone `ninja.exe`, so the verified Windows flow here uses `NMake Makefiles`.
 - `-DCMAKE_POLICY_VERSION_MINIMUM=3.5` may be needed when configuring this tree with newer CMake 4.x releases because some plugin CMake files still declare compatibility with older CMake versions.
 - The resulting application is installed to `D:\CloudCompare\install-release\CloudCompare\CloudCompare.exe` with the default plugin/runtime layout.
 
-Verified Debug example on Windows 11 with Qt 5.15.2 + MSVC Build Tools 2022 + Ninja:
+Verified Debug example on Windows 11 with Qt 5.14.2 + MSVC Build Tools 2022 + NMake:
 
 ```shell
 call C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat
 
-"C:\Program Files\CMake\bin\cmake.exe" ^
-  -S D:\CloudCompare ^
-  -B D:\CloudCompare\build-debug ^
-  -G Ninja ^
-  -DCMAKE_BUILD_TYPE=Debug ^
-  -DCMAKE_PREFIX_PATH=D:\qt\5.15.2\msvc2019_64 ^
-  -DCMAKE_INSTALL_PREFIX=D:\CloudCompare\install-debug ^
-  -DCMAKE_MAKE_PROGRAM=D:\qt\Tools\Ninja\ninja.exe ^
-  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+"C:\Program Files\CMake\bin\cmake.exe" -S D:\CloudCompare -B D:\CloudCompare\build-debug -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=D:\Qt\Qt-5.14.2\5.14.2\msvc2017_64 -DCMAKE_INSTALL_PREFIX=D:\CloudCompare\install-debug -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 
-"C:\Program Files\CMake\bin\cmake.exe" --build D:\CloudCompare\build-debug --parallel
+"C:\Program Files\CMake\bin\cmake.exe" --build D:\CloudCompare\build-debug
 "C:\Program Files\CMake\bin\cmake.exe" --install D:\CloudCompare\build-debug
 ```
 
 Notes:
 - `vcvars64.bat` initializes the MSVC compiler environment before configuring or building.
+- This Qt installation does not provide a standalone `ninja.exe`, so the verified Windows flow here uses `NMake Makefiles`.
 - `-DCMAKE_POLICY_VERSION_MINIMUM=3.5` may be needed when configuring this tree with newer CMake 4.x releases because some plugin CMake files still declare compatibility with older CMake versions.
 - The resulting application is installed to `D:\CloudCompare\install-debug\CloudCompare\CloudCompare.exe` with the default plugin/runtime layout.
 
