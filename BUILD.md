@@ -51,7 +51,7 @@ mkdir build && cd build
 cmake ..
 ```
 
-Verified example on Windows 11 with Qt 5.15.2 + MSVC Build Tools 2022 + Ninja:
+Verified Release example on Windows 11 with Qt 5.15.2 + MSVC Build Tools 2022 + Ninja:
 
 ```shell
 call C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat
@@ -74,6 +74,30 @@ Notes:
 - `vcvars64.bat` initializes the MSVC compiler environment before configuring or building.
 - `-DCMAKE_POLICY_VERSION_MINIMUM=3.5` may be needed when configuring this tree with newer CMake 4.x releases because some plugin CMake files still declare compatibility with older CMake versions.
 - The resulting application is installed to `D:\CloudCompare\install-release\CloudCompare\CloudCompare.exe` with the default plugin/runtime layout.
+
+Verified Debug example on Windows 11 with Qt 5.15.2 + MSVC Build Tools 2022 + Ninja:
+
+```shell
+call C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat
+
+"C:\Program Files\CMake\bin\cmake.exe" ^
+  -S D:\CloudCompare ^
+  -B D:\CloudCompare\build-debug ^
+  -G Ninja ^
+  -DCMAKE_BUILD_TYPE=Debug ^
+  -DCMAKE_PREFIX_PATH=D:\qt\5.15.2\msvc2019_64 ^
+  -DCMAKE_INSTALL_PREFIX=D:\CloudCompare\install-debug ^
+  -DCMAKE_MAKE_PROGRAM=D:\qt\Tools\Ninja\ninja.exe ^
+  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
+"C:\Program Files\CMake\bin\cmake.exe" --build D:\CloudCompare\build-debug --parallel
+"C:\Program Files\CMake\bin\cmake.exe" --install D:\CloudCompare\build-debug
+```
+
+Notes:
+- `vcvars64.bat` initializes the MSVC compiler environment before configuring or building.
+- `-DCMAKE_POLICY_VERSION_MINIMUM=3.5` may be needed when configuring this tree with newer CMake 4.x releases because some plugin CMake files still declare compatibility with older CMake versions.
+- The resulting application is installed to `D:\CloudCompare\install-debug\CloudCompare\CloudCompare.exe` with the default plugin/runtime layout.
 
 You can always take a look at how CloudCompare is being build on [GitHub's CI](.github/workflows/build.yml)
 

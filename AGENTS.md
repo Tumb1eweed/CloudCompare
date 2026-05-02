@@ -49,6 +49,31 @@ Main executable after install:
 
 - `D:\CloudCompare\install-release\CloudCompare\CloudCompare.exe`
 
+## Verified Debug Configure / Build / Install
+
+Run from `cmd.exe`:
+
+```bat
+call C:\BuildTools\VC\Auxiliary\Build\vcvars64.bat
+
+"C:\Program Files\CMake\bin\cmake.exe" ^
+  -S D:\CloudCompare ^
+  -B D:\CloudCompare\build-debug ^
+  -G Ninja ^
+  -DCMAKE_BUILD_TYPE=Debug ^
+  -DCMAKE_PREFIX_PATH=D:\qt\5.15.2\msvc2019_64 ^
+  -DCMAKE_INSTALL_PREFIX=D:\CloudCompare\install-debug ^
+  -DCMAKE_MAKE_PROGRAM=D:\qt\Tools\Ninja\ninja.exe ^
+  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
+"C:\Program Files\CMake\bin\cmake.exe" --build D:\CloudCompare\build-debug --parallel
+"C:\Program Files\CMake\bin\cmake.exe" --install D:\CloudCompare\build-debug
+```
+
+Main executable after install:
+
+- `D:\CloudCompare\install-debug\CloudCompare\CloudCompare.exe`
+
 ## Verified Optional Plugin Builds
 
 ### GL plugin: qEDL
@@ -101,7 +126,9 @@ Important:
 
 These local directories are expected during development and should not be committed unless explicitly requested:
 
+- `build-debug/`
 - `build-release/`
+- `install-debug/`
 - `install-release/`
 - `install/`
 
